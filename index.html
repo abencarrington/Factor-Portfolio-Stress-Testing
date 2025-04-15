@@ -80,13 +80,15 @@
 <p>This project dynamically constructs a factor-tilted portfolio using the Fama–French 5 Factor model.
 The historical factor data is sourced directly from Kenneth French’s website via web scraping.
 The portfolio adjusts its weights based on the current market regime (determined via SPY’s volatility and moving averages) and undergoes stress testing with various scenarios.</p>
-<p>Features:
-- <strong>Market Regime Analysis:</strong> Uses SPY’s rolling volatility and moving averages.
-- <strong>Dynamic Factor Tilting:</strong> Adjusts portfolio weights based on the regime.
-- <strong>Risk Analysis:</strong> Calculates volatility, Sharpe ratio, VaR, CVaR, maximum drawdown, skewness, and kurtosis.
-- <strong>Stress Testing:</strong> Evaluates performance under hypothetical adverse scenarios.
-- <strong>Automated Documentation:</strong> Builds a static site with Sphinx.
-- <strong>GitHub Pages Deployment:</strong> Automatically updates the site on a weekly schedule.</p>
+<p>Features:</p>
+<ul class="simple">
+<li><p><strong>Market Regime Analysis:</strong> Uses SPY’s rolling volatility and moving averages.</p></li>
+<li><p><strong>Dynamic Factor Tilting:</strong> Adjusts portfolio weights based on the regime.</p></li>
+<li><p><strong>Risk Analysis:</strong> Calculates volatility, Sharpe ratio, VaR, CVaR, maximum drawdown, skewness, and kurtosis.</p></li>
+<li><p><strong>Stress Testing:</strong> Evaluates performance under hypothetical adverse scenarios.</p></li>
+<li><p><strong>Automated Documentation:</strong> Builds a static site with Sphinx.</p></li>
+<li><p><strong>GitHub Pages Deployment:</strong> Automatically updates the site on a weekly schedule.</p></li>
+</ul>
 </section>
 <section id="portfolio-performance">
 <h2>Portfolio Performance<a class="headerlink" href="#portfolio-performance" title="Permalink to this heading"></a></h2>
@@ -97,8 +99,8 @@ The portfolio adjusts its weights based on the current market regime (determined
 <p>The following individual plots display the risk metrics computed for both the baseline portfolio and under different stress scenarios.</p>
 <img alt="Annualized Volatility" class="align-center" src="_images/annualized_volatility.png" />
 <img alt="Sharpe Ratio" class="align-center" src="_images/sharpe_ratio.png" />
-<img alt="VaR (95%)" class="align-center" src="_images/var_95.png" />
-<img alt="CVaR (95%)" class="align-center" src="_images/cvar_95.png" />
+<img alt="VaR (95%)" class="align-center" src="_images/var_%2895%25%29.png" />
+<img alt="CVaR (95%)" class="align-center" src="_images/cvar_%2895%25%29.png" />
 <img alt="Maximum Drawdown" class="align-center" src="_images/maximum_drawdown.png" />
 <img alt="Skewness" class="align-center" src="_images/skewness.png" />
 <img alt="Kurtosis" class="align-center" src="_images/kurtosis.png" />

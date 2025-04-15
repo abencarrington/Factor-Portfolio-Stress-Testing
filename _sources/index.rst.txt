@@ -11,11 +11,17 @@ The historical factor data is sourced directly from Kenneth French’s website v
 The portfolio adjusts its weights based on the current market regime (determined via SPY's volatility and moving averages) and undergoes stress testing with various scenarios.
 
 Features:
+
 - **Market Regime Analysis:** Uses SPY’s rolling volatility and moving averages.
+
 - **Dynamic Factor Tilting:** Adjusts portfolio weights based on the regime.
+
 - **Risk Analysis:** Calculates volatility, Sharpe ratio, VaR, CVaR, maximum drawdown, skewness, and kurtosis.
+
 - **Stress Testing:** Evaluates performance under hypothetical adverse scenarios.
+
 - **Automated Documentation:** Builds a static site with Sphinx.
+
 - **GitHub Pages Deployment:** Automatically updates the site on a weekly schedule.
 
 
@@ -37,11 +43,11 @@ The following individual plots display the risk metrics computed for both the ba
    :alt: Sharpe Ratio
    :align: center
 
-.. image:: _static/var_95.png
+.. image:: _static/var_(95%).png
    :alt: VaR (95%)
    :align: center
 
-.. image:: _static/cvar_95.png
+.. image:: _static/cvar_(95%).png
    :alt: CVaR (95%)
    :align: center
 
