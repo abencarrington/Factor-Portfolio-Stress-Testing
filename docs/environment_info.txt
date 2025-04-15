@@ -1,0 +1,8 @@
+Market Regime:
+{'regime': 'Recession', 'description': 'High volatility environment indicating potential recession.', 'volatility': 0.44397963748317315, 'trend': 'Bullish'}
+
+Baseline Risk Metrics:
+{'Annualized Volatility': np.float64(0.0479), 'Sharpe Ratio': np.float64(0.6715), 'VaR 95': np.float64(0.0043), 'CVaR 95': np.float64(0.007), 'Maximum Drawdown': np.float64(-0.1984), 'Skewness': np.float64(0.0499), 'Kurtosis': np.float64(8.1135)}
+
+Stress Test Results:
+{'Severe Recession': {'Annualized Volatility': np.float64(0.0335), 'Sharpe Ratio': np.float64(-6.8423), 'VaR 95': np.float64(0.004), 'CVaR 95': np.float64(0.0059), 'Maximum Drawdown': np.float64(-0.9997), 'Skewness': np.float64(0.0499), 'Kurtosis': np.float64(8.1135)}, 'Rapid Rate Hike': {'Annualized Volatility': np.float64(0.0407), 'Sharpe Ratio': np.float64(-2.4224), 'VaR 95': np.float64(0.0041), 'CVaR 95': np.float64(0.0064), 'Maximum Drawdown': np.float64(-0.9693), 'Skewness': np.float64(0.0499), 'Kurtosis': np.float64(8.1135)}, 'Market Crash': {'Annualized Volatility': np.float64(0.0287), 'Sharpe Ratio': np.float64(-16.8607), 'VaR 95': np.float64(0.0046), 'CVaR 95': np.float64(0.0062), 'Maximum Drawdown': np.float64(-1.0), 'Skewness': np.float64(0.0499), 'Kurtosis': np.float64(8.1135)}, 'Mild Correction': {'Annualized Volatility': np.float64(0.0455), 'Sharpe Ratio': np.float64(-0.4358), 'VaR 95': np.float64(0.0043), 'CVaR 95': np.float64(0.0068), 'Maximum Drawdown': np.float64(-0.5345), 'Skewness': np.float64(0.0499), 'Kurtosis': np.float64(8.1135)}}
