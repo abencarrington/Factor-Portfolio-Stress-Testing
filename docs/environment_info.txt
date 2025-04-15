@@ -1,5 +1,5 @@
 Market Regime:
-{'regime': 'Recession', 'description': 'High volatility environment indicating potential recession.', 'volatility': 0.44329947526695734, 'trend': 'Bullish'}
+{'regime': 'Recession', 'description': 'High volatility environment indicating potential recession.', 'volatility': 0.44329947526695745, 'trend': 'Bullish'}
 
 Baseline Risk Metrics:
 {'Annualized Volatility': np.float64(0.0479), 'Sharpe Ratio': np.float64(0.6715), 'VaR (95%)': np.float64(0.0043), 'CVaR (95%)': np.float64(0.007), 'Maximum Drawdown': np.float64(-0.1984), 'Skewness': np.float64(0.0499), 'Kurtosis': np.float64(8.1135)}
