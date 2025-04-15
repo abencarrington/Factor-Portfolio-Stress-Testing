@@ -1,0 +1,367 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Factor Data Module &mdash; Dynamic Factor-Tilted Portfolio with Macro Stress Testing 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=359c27e9"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Dynamic Factor-Tilted Portfolio with Macro Stress Testing" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Dynamic Factor-Tilted Portfolio with Macro Stress Testing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Factor Data Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#factors.download_fama_french_5_factors"><code class="docutils literal notranslate"><span class="pre">download_fama_french_5_factors()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#factors.get_fama_french_5_factor_url"><code class="docutils literal notranslate"><span class="pre">get_fama_french_5_factor_url()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#module-macro">Market Regime Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#macro.analyze_market_regime"><code class="docutils literal notranslate"><span class="pre">analyze_market_regime()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#macro.define_stress_scenarios"><code class="docutils literal notranslate"><span class="pre">define_stress_scenarios()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#module-portfolio">Portfolio Construction Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#portfolio.calculate_risk_metrics"><code class="docutils literal notranslate"><span class="pre">calculate_risk_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#portfolio.construct_portfolio"><code class="docutils literal notranslate"><span class="pre">construct_portfolio()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#portfolio.stress_test_portfolio"><code class="docutils literal notranslate"><span class="pre">stress_test_portfolio()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#module-main">Main Analysis Script</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#main.generate_individual_metric_plots"><code class="docutils literal notranslate"><span class="pre">generate_individual_metric_plots()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Dynamic Factor-Tilted Portfolio with Macro Stress Testing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Factor Data Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-factors">
+<span id="factor-data-module"></span><h1>Factor Data Module<a class="headerlink" href="#module-factors" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="factors.download_fama_french_5_factors">
+<span class="sig-prename descclassname"><span class="pre">factors.</span></span><span class="sig-name descname"><span class="pre">download_fama_french_5_factors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1990-01-01'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/factors.html#download_fama_french_5_factors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#factors.download_fama_french_5_factors" title="Permalink to this definition"></a></dt>
+<dd><p>Downloads and processes the historical daily Fama–French 5 Factor data from Kenneth French’s website.</p>
+<p>This file does not have a labeled header row. Instead, every valid data row starts with an 8-digit date.
+We assume that the file’s columns appear in the following order:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Date (YYYYMMDD)</p></li>
+<li><p>Mkt-RF (market premium; we rename this to “MKT”)</p></li>
+<li><p>SMB</p></li>
+<li><p>HML</p></li>
+<li><p>RMW</p></li>
+<li><p>CMA</p></li>
+<li><p>RF (the risk-free rate)</p></li>
+</ol>
+</div></blockquote>
+<p>Factor values (columns 2–6) and RF (column 7) are originally in percentages. Here, we convert them
+to decimals. For portfolio construction, we later use only the five factor columns (dropping RF).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>start_date</strong> (<em>str</em>) – Only data on or after this date (YYYY-MM-DD) will be returned.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A pandas DataFrame indexed by date with columns:</dt><dd><p>[‘MKT’, ‘SMB’, ‘HML’, ‘RMW’, ‘CMA’, ‘RF’]</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="factors.get_fama_french_5_factor_url">
+<span class="sig-prename descclassname"><span class="pre">factors.</span></span><span class="sig-name descname"><span class="pre">get_fama_french_5_factor_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/factors.html#get_fama_french_5_factor_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#factors.get_fama_french_5_factor_url" title="Permalink to this definition"></a></dt>
+<dd><p>Scrapes Kenneth French’s data library page to locate the URL for the Fama–French 5 Factor daily data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The full URL to the zip file containing the daily data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-macro">
+<span id="market-regime-module"></span><h1>Market Regime Module<a class="headerlink" href="#module-macro" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="macro.analyze_market_regime">
+<span class="sig-prename descclassname"><span class="pre">macro.</span></span><span class="sig-name descname"><span class="pre">analyze_market_regime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2020-01-01'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/macro.html#analyze_market_regime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#macro.analyze_market_regime" title="Permalink to this definition"></a></dt>
+<dd><p>Analyze the current market regime using SPY historical data.</p>
+<dl class="simple">
+<dt>Uses:</dt><dd><ul class="simple">
+<li><p>30-day rolling annualized volatility of SPY returns.</p></li>
+<li><p>50-day and 200-day moving averages to assess trend.</p></li>
+</ul>
+</dd>
+<dt>Classification rules (example):</dt><dd><ul class="simple">
+<li><p>If volatility &gt; 0.25: ‘Recession’</p></li>
+<li><p>Else if volatility &lt; 0.15 and 50-day MA &gt; 200-day MA: ‘Expansion’</p></li>
+<li><p>Else if 50-day MA &lt; 200-day MA: ‘Contraction’</p></li>
+<li><p>Otherwise: ‘Recovery’</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_date</strong> (<em>str</em>) – Start date for SPY data.</p></li>
+<li><p><strong>end_date</strong> (<em>str</em>) – End date (defaults to today if None).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Contains:</dt><dd><ul class="simple">
+<li><p>’regime’: The classified market regime.</p></li>
+<li><p>’description’: A short description.</p></li>
+<li><p>’volatility’: Latest computed annualized volatility.</p></li>
+<li><p>’trend’: ‘Bullish’ or ‘Bearish’.</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="macro.define_stress_scenarios">
+<span class="sig-prename descclassname"><span class="pre">macro.</span></span><span class="sig-name descname"><span class="pre">define_stress_scenarios</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/macro.html#define_stress_scenarios"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#macro.define_stress_scenarios" title="Permalink to this definition"></a></dt>
+<dd><p>Define a set of hypothetical macroeconomic stress scenarios.</p>
+<dl class="simple">
+<dt>Each scenario now includes:</dt><dd><ul class="simple">
+<li><p>‘shock’: the multiplicative factor (e.g., -0.30 means returns become 70% of original)</p></li>
+<li><p>‘additive’: an additional additive shock to simulate a downward shift</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of scenarios with keys ‘name’, ‘shock’, ‘additive’, and ‘description’.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-portfolio">
+<span id="portfolio-construction-module"></span><h1>Portfolio Construction Module<a class="headerlink" href="#module-portfolio" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="portfolio.calculate_risk_metrics">
+<span class="sig-prename descclassname"><span class="pre">portfolio.</span></span><span class="sig-name descname"><span class="pre">calculate_risk_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">risk_free_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/portfolio.html#calculate_risk_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio.calculate_risk_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate comprehensive risk metrics for a series of portfolio returns.</p>
+<dl class="simple">
+<dt>Metrics include:</dt><dd><ul class="simple">
+<li><p>Annualized volatility</p></li>
+<li><p>Annualized Sharpe ratio</p></li>
+<li><p>Historical VaR (95%)</p></li>
+<li><p>Historical CVaR (95%)</p></li>
+<li><p>Maximum drawdown</p></li>
+<li><p>Skewness and kurtosis</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>returns</strong> (<em>Series</em>) – Daily portfolio returns.</p></li>
+<li><p><strong>risk_free_rate</strong> (<em>float</em>) – Default 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Risk metrics.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="portfolio.construct_portfolio">
+<span class="sig-prename descclassname"><span class="pre">portfolio.</span></span><span class="sig-name descname"><span class="pre">construct_portfolio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/portfolio.html#construct_portfolio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio.construct_portfolio" title="Permalink to this definition"></a></dt>
+<dd><p>Construct a dynamic portfolio from the five-factor returns with tilting based on market regime.</p>
+<dl class="simple">
+<dt>Weight scheme example:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>Expansion: Overweight market factor.</dt><dd><p>Weights: [MKT, SMB, HML, RMW, CMA] = [0.40, 0.15, 0.15, 0.15, 0.15]</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Recession: Reduce market exposure; overweight defensive factors.</dt><dd><p>Weights: [0.15, 0.22, 0.22, 0.20, 0.21]</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Otherwise (Contraction, Recovery): Equal weights.</dt><dd><p>Weights: [0.20, 0.20, 0.20, 0.20, 0.20]</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>factors</strong> (<em>DataFrame</em>) – Must have columns [‘MKT’, ‘SMB’, ‘HML’, ‘RMW’, ‘CMA’].</p></li>
+<li><p><strong>regime</strong> (<em>dict</em>) – Market regime info.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Daily portfolio returns.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="portfolio.stress_test_portfolio">
+<span class="sig-prename descclassname"><span class="pre">portfolio.</span></span><span class="sig-name descname"><span class="pre">stress_test_portfolio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenarios</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/portfolio.html#stress_test_portfolio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio.stress_test_portfolio" title="Permalink to this definition"></a></dt>
+<dd><p>Apply stress scenarios to portfolio returns and compute risk metrics.</p>
+<p>Each scenario adjusts returns using both a multiplicative and additive shock.
+That is, for a given scenario,
+stressed_returns = returns * (1 + scenario[‘shock’]) + scenario[‘additive’]</p>
+<p>This method will alter both the scale and distribution shape, so that metrics like Sharpe ratio,
+skewness, and kurtosis (which are scale- and shift-sensitive, respectively) will change.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>returns</strong> (<em>Series</em>) – Original daily portfolio returns.</p></li>
+<li><p><strong>scenarios</strong> (<em>list</em>) – List of stress scenarios.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with scenario names as keys and risk metrics as values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-main">
+<span id="main-analysis-script"></span><h1>Main Analysis Script<a class="headerlink" href="#module-main" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="main.generate_individual_metric_plots">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">generate_individual_metric_plots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baseline_metrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stressed_results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#generate_individual_metric_plots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.generate_individual_metric_plots" title="Permalink to this definition"></a></dt>
+<dd><p>Generate an individual plot (bar chart) for each risk metric.</p>
+<p>For each risk metric, the plot shows the baseline value alongside the stressed scenario values.
+Each plot is saved as a separate PNG file in the docs/_static directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>baseline_metrics</strong> (<em>dict</em>) – Risk metrics for the baseline (current regime).</p></li>
+<li><p><strong>stressed_results</strong> (<em>dict</em>) – Dictionary with scenario names as keys and corresponding risk metrics as values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.main">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.main" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Dynamic Factor-Tilted Portfolio with Macro Stress Testing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
