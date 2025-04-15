@@ -65,8 +65,8 @@ def calculate_risk_metrics(returns: pd.Series, risk_free_rate=0.0):
     return {
         'Annualized Volatility': round(volatility, 4),
         'Sharpe Ratio': round(sharpe_ratio, 4),
-        'VaR 95': round(var_95, 4),
-        'CVaR 95': round(cvar_95, 4),
+        'VaR (95%)': round(var_95, 4),
+        'CVaR (95%)': round(cvar_95, 4),
         'Maximum Drawdown': round(max_drawdown, 4),
         'Skewness': round(skewness, 4),
         'Kurtosis': round(kurtosis, 4)
