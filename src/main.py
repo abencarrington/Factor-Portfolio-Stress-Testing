@@ -67,13 +67,18 @@ def main():
     stressed_results = stress_test_portfolio(portfolio_returns, scenarios)
     print("Stress Test Results:", stressed_results)
 
-    # Generate cumulative returns plot (unchanged)
+    # Generate cumulative returns plot and include 50 & 200 day moving averages.
     cum_returns = (1 + portfolio_returns).cumprod()
+    ma50 = cum_returns.rolling(window=50).mean()
+    ma200 = cum_returns.rolling(window=200).mean()
+
     output_dir = os.path.join("docs", "_static")
     os.makedirs(output_dir, exist_ok=True)
     portfolio_plot_path = os.path.join(output_dir, "portfolio_returns.png")
     plt.figure(figsize=(10, 6))
     plt.plot(dates, cum_returns, label="Portfolio Cumulative Return")
+    plt.plot(dates, ma50, label="50-Day MA", color="red", linestyle="--")
+    plt.plot(dates, ma200, label="200-Day MA", color="green", linestyle="--")
     plt.xlabel("Date")
     plt.ylabel("Cumulative Return")
     plt.title("Dynamic Portfolio Cumulative Returns")
