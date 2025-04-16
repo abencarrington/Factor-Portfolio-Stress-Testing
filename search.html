@@ -8,6 +8,7 @@
   <title>Search &mdash; Dynamic Factor-Tilted Portfolio with Macro Stress Testing 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=5cf0b8b4" />
 
   
     
@@ -16,6 +17,7 @@
       <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=359c27e9"></script>
       <script src="_static/doctools.js?v=888ff710"></script>
       <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/searchtools.js"></script>
     <script src="_static/language_data.js"></script>
@@ -44,10 +46,32 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">Factor Data Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html#module-macro">Market Regime Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html#module-portfolio">Portfolio Construction Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html#module-main">Main Analysis Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Factor Data Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#factors.get_fama_french_5_factor_url"><code class="docutils literal notranslate"><span class="pre">get_fama_french_5_factor_url()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#factors.download_fama_french_5_factors"><code class="docutils literal notranslate"><span class="pre">download_fama_french_5_factors()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-macro">Market Regime Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#macro.analyze_market_regime"><code class="docutils literal notranslate"><span class="pre">analyze_market_regime()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#macro.define_stress_scenarios"><code class="docutils literal notranslate"><span class="pre">define_stress_scenarios()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-portfolio">Portfolio Construction Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#portfolio.construct_portfolio"><code class="docutils literal notranslate"><span class="pre">construct_portfolio()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#portfolio.monte_carlo_var_cvar"><code class="docutils literal notranslate"><span class="pre">monte_carlo_var_cvar()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#portfolio.calculate_risk_metrics"><code class="docutils literal notranslate"><span class="pre">calculate_risk_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#portfolio.generate_correlated_scenario_returns"><code class="docutils literal notranslate"><span class="pre">generate_correlated_scenario_returns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#portfolio.stress_test_portfolio"><code class="docutils literal notranslate"><span class="pre">stress_test_portfolio()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-main">Main Analysis Script</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#main.generate_plotly_metric_plots"><code class="docutils literal notranslate"><span class="pre">generate_plotly_metric_plots()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#main.generate_portfolio_performance_plot"><code class="docutils literal notranslate"><span class="pre">generate_portfolio_performance_plot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#main.generate_correlation_heatmap"><code class="docutils literal notranslate"><span class="pre">generate_correlation_heatmap()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#main.generate_risk_comparison_radar"><code class="docutils literal notranslate"><span class="pre">generate_risk_comparison_radar()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
         </div>

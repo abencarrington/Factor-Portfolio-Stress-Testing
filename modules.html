@@ -9,6 +9,7 @@
   <title>Factor Data Module &mdash; Dynamic Factor-Tilted Portfolio with Macro Stress Testing 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=5cf0b8b4" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -16,6 +17,7 @@
       <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=359c27e9"></script>
       <script src="_static/doctools.js?v=888ff710"></script>
       <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -44,8 +46,8 @@
               <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Factor Data Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#factors.download_fama_french_5_factors"><code class="docutils literal notranslate"><span class="pre">download_fama_french_5_factors()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#factors.get_fama_french_5_factor_url"><code class="docutils literal notranslate"><span class="pre">get_fama_french_5_factor_url()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#factors.download_fama_french_5_factors"><code class="docutils literal notranslate"><span class="pre">download_fama_french_5_factors()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#module-macro">Market Regime Module</a><ul>
@@ -54,13 +56,18 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#module-portfolio">Portfolio Construction Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#portfolio.calculate_risk_metrics"><code class="docutils literal notranslate"><span class="pre">calculate_risk_metrics()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#portfolio.construct_portfolio"><code class="docutils literal notranslate"><span class="pre">construct_portfolio()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#portfolio.monte_carlo_var_cvar"><code class="docutils literal notranslate"><span class="pre">monte_carlo_var_cvar()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#portfolio.calculate_risk_metrics"><code class="docutils literal notranslate"><span class="pre">calculate_risk_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#portfolio.generate_correlated_scenario_returns"><code class="docutils literal notranslate"><span class="pre">generate_correlated_scenario_returns()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#portfolio.stress_test_portfolio"><code class="docutils literal notranslate"><span class="pre">stress_test_portfolio()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#module-main">Main Analysis Script</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#main.generate_individual_metric_plots"><code class="docutils literal notranslate"><span class="pre">generate_individual_metric_plots()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#main.generate_plotly_metric_plots"><code class="docutils literal notranslate"><span class="pre">generate_plotly_metric_plots()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#main.generate_portfolio_performance_plot"><code class="docutils literal notranslate"><span class="pre">generate_portfolio_performance_plot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#main.generate_correlation_heatmap"><code class="docutils literal notranslate"><span class="pre">generate_correlation_heatmap()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#main.generate_risk_comparison_radar"><code class="docutils literal notranslate"><span class="pre">generate_risk_comparison_radar()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
@@ -92,6 +99,20 @@
              
   <section id="module-factors">
 <span id="factor-data-module"></span><h1>Factor Data Module<a class="headerlink" href="#module-factors" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="factors.get_fama_french_5_factor_url">
+<span class="sig-prename descclassname"><span class="pre">factors.</span></span><span class="sig-name descname"><span class="pre">get_fama_french_5_factor_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/factors.html#get_fama_french_5_factor_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#factors.get_fama_french_5_factor_url" title="Permalink to this definition"></a></dt>
+<dd><p>Scrapes Kenneth French’s data library page to locate the URL for the Fama–French 5 Factor daily data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The full URL to the zip file containing the daily data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="factors.download_fama_french_5_factors">
 <span class="sig-prename descclassname"><span class="pre">factors.</span></span><span class="sig-name descname"><span class="pre">download_fama_french_5_factors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1990-01-01'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/factors.html#download_fama_french_5_factors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#factors.download_fama_french_5_factors" title="Permalink to this definition"></a></dt>
@@ -128,20 +149,6 @@ to decimals. For portfolio construction, we later use only the five factor colum
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="factors.get_fama_french_5_factor_url">
-<span class="sig-prename descclassname"><span class="pre">factors.</span></span><span class="sig-name descname"><span class="pre">get_fama_french_5_factor_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/factors.html#get_fama_french_5_factor_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#factors.get_fama_french_5_factor_url" title="Permalink to this definition"></a></dt>
-<dd><p>Scrapes Kenneth French’s data library page to locate the URL for the Fama–French 5 Factor daily data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The full URL to the zip file containing the daily data.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 <section id="module-macro">
 <span id="market-regime-module"></span><h1>Market Regime Module<a class="headerlink" href="#module-macro" title="Permalink to this heading"></a></h1>
@@ -153,9 +160,10 @@ to decimals. For portfolio construction, we later use only the five factor colum
 <dt>Uses:</dt><dd><ul class="simple">
 <li><p>30-day rolling annualized volatility of SPY returns.</p></li>
 <li><p>50-day and 200-day moving averages to assess trend.</p></li>
+<li><p>14-day RSI to assess momentum</p></li>
 </ul>
 </dd>
-<dt>Classification rules (example):</dt><dd><ul class="simple">
+<dt>Classification rules:</dt><dd><ul class="simple">
 <li><p>If volatility &gt; 0.25: ‘Recession’</p></li>
 <li><p>Else if volatility &lt; 0.15 and 50-day MA &gt; 200-day MA: ‘Expansion’</p></li>
 <li><p>Else if 50-day MA &lt; 200-day MA: ‘Contraction’</p></li>
@@ -177,6 +185,7 @@ to decimals. For portfolio construction, we later use only the five factor colum
 <li><p>’description’: A short description.</p></li>
 <li><p>’volatility’: Latest computed annualized volatility.</p></li>
 <li><p>’trend’: ‘Bullish’ or ‘Bearish’.</p></li>
+<li><p>’rsi’: Relative Strength Index value.</p></li>
 </ul>
 </dd>
 </dl>
@@ -191,17 +200,21 @@ to decimals. For portfolio construction, we later use only the five factor colum
 <dl class="py function">
 <dt class="sig sig-object py" id="macro.define_stress_scenarios">
 <span class="sig-prename descclassname"><span class="pre">macro.</span></span><span class="sig-name descname"><span class="pre">define_stress_scenarios</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/macro.html#define_stress_scenarios"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#macro.define_stress_scenarios" title="Permalink to this definition"></a></dt>
-<dd><p>Define a set of hypothetical macroeconomic stress scenarios.</p>
+<dd><p>Define a set of hypothetical macroeconomic stress scenarios with enhanced parameters
+to create more realistic variations in risk metrics.</p>
 <dl class="simple">
-<dt>Each scenario now includes:</dt><dd><ul class="simple">
-<li><p>‘shock’: the multiplicative factor (e.g., -0.30 means returns become 70% of original)</p></li>
-<li><p>‘additive’: an additional additive shock to simulate a downward shift</p></li>
+<dt>Each scenario includes:</dt><dd><ul class="simple">
+<li><p>‘shock’: Multiplicative factor (e.g., -0.30 means returns become 70% of original)</p></li>
+<li><p>‘additive’: Additional additive shock to simulate a downward shift</p></li>
+<li><p>‘vol_factor’: Volatility scaling factor</p></li>
+<li><p>‘skew_factor’: Skewness adjustment factor</p></li>
+<li><p>‘tail_factor’: Factor to enhance tail events (affecting kurtosis)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of scenarios with keys ‘name’, ‘shock’, ‘additive’, and ‘description’.</p>
+<dd class="field-odd"><p>A list of scenarios with comprehensive parameters.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>list</p>
@@ -213,42 +226,11 @@ to decimals. For portfolio construction, we later use only the five factor colum
 <section id="module-portfolio">
 <span id="portfolio-construction-module"></span><h1>Portfolio Construction Module<a class="headerlink" href="#module-portfolio" title="Permalink to this heading"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="portfolio.calculate_risk_metrics">
-<span class="sig-prename descclassname"><span class="pre">portfolio.</span></span><span class="sig-name descname"><span class="pre">calculate_risk_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">risk_free_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/portfolio.html#calculate_risk_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio.calculate_risk_metrics" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate comprehensive risk metrics for a series of portfolio returns.</p>
-<dl class="simple">
-<dt>Metrics include:</dt><dd><ul class="simple">
-<li><p>Annualized volatility</p></li>
-<li><p>Annualized Sharpe ratio</p></li>
-<li><p>Historical VaR (95%)</p></li>
-<li><p>Historical CVaR (95%)</p></li>
-<li><p>Maximum drawdown</p></li>
-<li><p>Skewness and kurtosis</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>returns</strong> (<em>Series</em>) – Daily portfolio returns.</p></li>
-<li><p><strong>risk_free_rate</strong> (<em>float</em>) – Default 0.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Risk metrics.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="portfolio.construct_portfolio">
-<span class="sig-prename descclassname"><span class="pre">portfolio.</span></span><span class="sig-name descname"><span class="pre">construct_portfolio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/portfolio.html#construct_portfolio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio.construct_portfolio" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">portfolio.</span></span><span class="sig-name descname"><span class="pre">construct_portfolio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/portfolio.html#construct_portfolio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio.construct_portfolio" title="Permalink to this definition"></a></dt>
 <dd><p>Construct a dynamic portfolio from the five-factor returns with tilting based on market regime.</p>
 <dl class="simple">
-<dt>Weight scheme example:</dt><dd><ul class="simple">
+<dt>Weight scheme:</dt><dd><ul class="simple">
 <li><dl class="simple">
 <dt>Expansion: Overweight market factor.</dt><dd><p>Weights: [MKT, SMB, HML, RMW, CMA] = [0.40, 0.15, 0.15, 0.15, 0.15]</p>
 </dd>
@@ -260,7 +242,12 @@ to decimals. For portfolio construction, we later use only the five factor colum
 </dl>
 </li>
 <li><dl class="simple">
-<dt>Otherwise (Contraction, Recovery): Equal weights.</dt><dd><p>Weights: [0.20, 0.20, 0.20, 0.20, 0.20]</p>
+<dt>Contraction: Overweight value and quality factors.</dt><dd><p>Weights: [0.15, 0.15, 0.30, 0.25, 0.15]</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Recovery: Balance growth and defensive factors.</dt><dd><p>Weights: [0.25, 0.25, 0.15, 0.15, 0.20]</p>
 </dd>
 </dl>
 </li>
@@ -284,19 +271,98 @@ to decimals. For portfolio construction, we later use only the five factor colum
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="portfolio.monte_carlo_var_cvar">
+<span class="sig-prename descclassname"><span class="pre">portfolio.</span></span><span class="sig-name descname"><span class="pre">monte_carlo_var_cvar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_simulations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">horizon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'norm'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/portfolio.html#monte_carlo_var_cvar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio.monte_carlo_var_cvar" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate VaR and CVaR using Monte Carlo simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>returns</strong> (<em>Series</em>) – Historical daily returns.</p></li>
+<li><p><strong>confidence_level</strong> (<em>float</em>) – Confidence level (e.g., 0.95 for 95%).</p></li>
+<li><p><strong>n_simulations</strong> (<em>int</em>) – Number of Monte Carlo simulations.</p></li>
+<li><p><strong>horizon</strong> (<em>int</em>) – Time horizon in days.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – Distribution method (‘norm’, ‘t’, or ‘empirical’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(VaR, CVaR) at the specified confidence level.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="portfolio.calculate_risk_metrics">
+<span class="sig-prename descclassname"><span class="pre">portfolio.</span></span><span class="sig-name descname"><span class="pre">calculate_risk_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">risk_free_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mc_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'t'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/portfolio.html#calculate_risk_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio.calculate_risk_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate comprehensive risk metrics for a series of portfolio returns.</p>
+<dl class="simple">
+<dt>Metrics include:</dt><dd><ul class="simple">
+<li><p>Annualized volatility</p></li>
+<li><p>Annualized Sharpe ratio</p></li>
+<li><p>Monte Carlo VaR (95%)</p></li>
+<li><p>Monte Carlo CVaR (95%)</p></li>
+<li><p>Maximum drawdown</p></li>
+<li><p>Skewness and kurtosis</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>returns</strong> (<em>Series</em>) – Daily portfolio returns.</p></li>
+<li><p><strong>risk_free_rate</strong> (<em>float</em>) – Annual risk-free rate.</p></li>
+<li><p><strong>mc_method</strong> (<em>str</em>) – Monte Carlo simulation method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Risk metrics.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="portfolio.generate_correlated_scenario_returns">
+<span class="sig-prename descclassname"><span class="pre">portfolio.</span></span><span class="sig-name descname"><span class="pre">generate_correlated_scenario_returns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shock_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/portfolio.html#generate_correlated_scenario_returns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio.generate_correlated_scenario_returns" title="Permalink to this definition"></a></dt>
+<dd><p>Generate scenario returns with specified shock parameters that maintain realistic
+correlations and create meaningful variations in higher moments (skewness, kurtosis).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>returns</strong> (<em>Series</em>) – Original portfolio returns.</p></li>
+<li><p><strong>shock_params</strong> (<em>dict</em>) – Parameters for the shock including:
+- ‘multiplicative’: Factor to multiply returns by
+- ‘additive’: Constant to add to returns
+- ‘vol_factor’: Factor to adjust volatility
+- ‘skew_factor’: Factor to adjust skewness
+- ‘tail_factor’: Factor to enhance tail events (affects kurtosis)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Adjusted returns for the stress scenario.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="portfolio.stress_test_portfolio">
-<span class="sig-prename descclassname"><span class="pre">portfolio.</span></span><span class="sig-name descname"><span class="pre">stress_test_portfolio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenarios</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/portfolio.html#stress_test_portfolio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio.stress_test_portfolio" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">portfolio.</span></span><span class="sig-name descname"><span class="pre">stress_test_portfolio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">returns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenarios</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mc_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'t'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/portfolio.html#stress_test_portfolio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#portfolio.stress_test_portfolio" title="Permalink to this definition"></a></dt>
 <dd><p>Apply stress scenarios to portfolio returns and compute risk metrics.</p>
-<p>Each scenario adjusts returns using both a multiplicative and additive shock.
-That is, for a given scenario,
-stressed_returns = returns * (1 + scenario[‘shock’]) + scenario[‘additive’]</p>
-<p>This method will alter both the scale and distribution shape, so that metrics like Sharpe ratio,
-skewness, and kurtosis (which are scale- and shift-sensitive, respectively) will change.</p>
+<p>Each scenario now has a more sophisticated shock model that affects not just
+the mean and variance but also higher moments like skewness and kurtosis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>returns</strong> (<em>Series</em>) – Original daily portfolio returns.</p></li>
-<li><p><strong>scenarios</strong> (<em>list</em>) – List of stress scenarios.</p></li>
+<li><p><strong>scenarios</strong> (<em>list</em>) – List of stress scenarios with shock parameters.</p></li>
+<li><p><strong>mc_method</strong> (<em>str</em>) – Monte Carlo simulation method for VaR calculations.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -312,16 +378,58 @@ skewness, and kurtosis (which are scale- and shift-sensitive, respectively) will
 <section id="module-main">
 <span id="main-analysis-script"></span><h1>Main Analysis Script<a class="headerlink" href="#module-main" title="Permalink to this heading"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="main.generate_individual_metric_plots">
-<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">generate_individual_metric_plots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baseline_metrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stressed_results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#generate_individual_metric_plots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.generate_individual_metric_plots" title="Permalink to this definition"></a></dt>
-<dd><p>Generate an individual plot (bar chart) for each risk metric.</p>
-<p>For each risk metric, the plot shows the baseline value alongside the stressed scenario values.
-Each plot is saved as a separate PNG file in the docs/_static directory.</p>
+<dt class="sig sig-object py" id="main.generate_plotly_metric_plots">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">generate_plotly_metric_plots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baseline_metrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stressed_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#generate_plotly_metric_plots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.generate_plotly_metric_plots" title="Permalink to this definition"></a></dt>
+<dd><p>Generate interactive Plotly visualizations for each risk metric.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>baseline_metrics</strong> (<em>dict</em>) – Risk metrics for the baseline (current regime).</p></li>
-<li><p><strong>stressed_results</strong> (<em>dict</em>) – Dictionary with scenario names as keys and corresponding risk metrics as values.</p></li>
+<li><p><strong>baseline_metrics</strong> (<em>dict</em>) – Risk metrics for the baseline portfolio.</p></li>
+<li><p><strong>stressed_results</strong> (<em>dict</em>) – Dictionary with scenario metrics.</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em>) – Directory to save the HTML files.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.generate_portfolio_performance_plot">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">generate_portfolio_performance_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">portfolio_returns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#generate_portfolio_performance_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.generate_portfolio_performance_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Generate an interactive Plotly plot of portfolio cumulative returns with moving averages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>portfolio_returns</strong> (<em>Series</em>) – Portfolio returns series.</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em>) – Directory to save the plot.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.generate_correlation_heatmap">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">generate_correlation_heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#generate_correlation_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.generate_correlation_heatmap" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a correlation heatmap of the five factors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>factors</strong> (<em>DataFrame</em>) – The factor returns dataframe.</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em>) – Directory to save the plot.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.generate_risk_comparison_radar">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">generate_risk_comparison_radar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baseline_metrics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stressed_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#generate_risk_comparison_radar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.generate_risk_comparison_radar" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a radar chart comparing risk metrics across scenarios.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>baseline_metrics</strong> (<em>dict</em>) – Risk metrics for the baseline portfolio.</p></li>
+<li><p><strong>stressed_results</strong> (<em>dict</em>) – Dictionary with scenario metrics.</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em>) – Directory to save the plot.</p></li>
 </ul>
 </dd>
 </dl>
@@ -330,7 +438,8 @@ Each plot is saved as a separate PNG file in the docs/_static directory.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="main.main">
 <span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/main.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.main" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Main analysis workflow.</p>
+</dd></dl>
 
 </section>
 

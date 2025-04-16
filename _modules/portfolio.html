@@ -8,6 +8,7 @@
   <title>portfolio &mdash; Dynamic Factor-Tilted Portfolio with Macro Stress Testing 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5cf0b8b4" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -15,6 +16,7 @@
       <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=359c27e9"></script>
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -41,10 +43,32 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">Factor Data Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html#module-macro">Market Regime Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html#module-portfolio">Portfolio Construction Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html#module-main">Main Analysis Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Factor Data Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#factors.get_fama_french_5_factor_url"><code class="docutils literal notranslate"><span class="pre">get_fama_french_5_factor_url()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#factors.download_fama_french_5_factors"><code class="docutils literal notranslate"><span class="pre">download_fama_french_5_factors()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html#module-macro">Market Regime Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#macro.analyze_market_regime"><code class="docutils literal notranslate"><span class="pre">analyze_market_regime()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#macro.define_stress_scenarios"><code class="docutils literal notranslate"><span class="pre">define_stress_scenarios()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html#module-portfolio">Portfolio Construction Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#portfolio.construct_portfolio"><code class="docutils literal notranslate"><span class="pre">construct_portfolio()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#portfolio.monte_carlo_var_cvar"><code class="docutils literal notranslate"><span class="pre">monte_carlo_var_cvar()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#portfolio.calculate_risk_metrics"><code class="docutils literal notranslate"><span class="pre">calculate_risk_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#portfolio.generate_correlated_scenario_returns"><code class="docutils literal notranslate"><span class="pre">generate_correlated_scenario_returns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#portfolio.stress_test_portfolio"><code class="docutils literal notranslate"><span class="pre">stress_test_portfolio()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html#module-main">Main Analysis Script</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#main.generate_plotly_metric_plots"><code class="docutils literal notranslate"><span class="pre">generate_plotly_metric_plots()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#main.generate_portfolio_performance_plot"><code class="docutils literal notranslate"><span class="pre">generate_portfolio_performance_plot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#main.generate_correlation_heatmap"><code class="docutils literal notranslate"><span class="pre">generate_correlation_heatmap()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#main.generate_risk_comparison_radar"><code class="docutils literal notranslate"><span class="pre">generate_risk_comparison_radar()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -74,19 +98,22 @@
   <h1>Source code for portfolio</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">skewnorm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
 <div class="viewcode-block" id="construct_portfolio"><a class="viewcode-back" href="../modules.html#portfolio.construct_portfolio">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">construct_portfolio</span><span class="p">(</span><span class="n">factors</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">regime</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Construct a dynamic portfolio from the five-factor returns with tilting based on market regime.</span>
 <span class="sd">    </span>
-<span class="sd">    Weight scheme example:</span>
+<span class="sd">    Weight scheme:</span>
 <span class="sd">      - Expansion: Overweight market factor.</span>
 <span class="sd">          Weights: [MKT, SMB, HML, RMW, CMA] = [0.40, 0.15, 0.15, 0.15, 0.15]</span>
 <span class="sd">      - Recession: Reduce market exposure; overweight defensive factors.</span>
 <span class="sd">          Weights: [0.15, 0.22, 0.22, 0.20, 0.21]</span>
-<span class="sd">      - Otherwise (Contraction, Recovery): Equal weights.</span>
-<span class="sd">          Weights: [0.20, 0.20, 0.20, 0.20, 0.20]</span>
+<span class="sd">      - Contraction: Overweight value and quality factors.</span>
+<span class="sd">          Weights: [0.15, 0.15, 0.30, 0.25, 0.15]</span>
+<span class="sd">      - Recovery: Balance growth and defensive factors.</span>
+<span class="sd">          Weights: [0.25, 0.25, 0.15, 0.15, 0.20]</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        factors (DataFrame): Must have columns [&#39;MKT&#39;, &#39;SMB&#39;, &#39;HML&#39;, &#39;RMW&#39;, &#39;CMA&#39;].</span>
@@ -99,36 +126,92 @@
         <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.40</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">])</span>
     <span class="k">elif</span> <span class="n">regime</span><span class="p">[</span><span class="s1">&#39;regime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Recession&#39;</span><span class="p">:</span>
         <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.22</span><span class="p">,</span> <span class="mf">0.22</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.21</span><span class="p">])</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">regime</span><span class="p">[</span><span class="s1">&#39;regime&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Contraction&#39;</span><span class="p">:</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># Recovery</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">])</span>
     
     <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">weights</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>  <span class="c1"># Normalize weights</span>
     <span class="n">portfolio_returns</span> <span class="o">=</span> <span class="n">factors</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">portfolio_returns</span></div>
 
-<div class="viewcode-block" id="calculate_risk_metrics"><a class="viewcode-back" href="../modules.html#portfolio.calculate_risk_metrics">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_risk_metrics</span><span class="p">(</span><span class="n">returns</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">risk_free_rate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<div class="viewcode-block" id="monte_carlo_var_cvar"><a class="viewcode-back" href="../modules.html#portfolio.monte_carlo_var_cvar">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">monte_carlo_var_cvar</span><span class="p">(</span><span class="n">returns</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">n_simulations</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">horizon</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;norm&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate VaR and CVaR using Monte Carlo simulation.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        returns (Series): Historical daily returns.</span>
+<span class="sd">        confidence_level (float): Confidence level (e.g., 0.95 for 95%).</span>
+<span class="sd">        n_simulations (int): Number of Monte Carlo simulations.</span>
+<span class="sd">        horizon (int): Time horizon in days.</span>
+<span class="sd">        method (str): Distribution method (&#39;norm&#39;, &#39;t&#39;, or &#39;empirical&#39;).</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: (VaR, CVaR) at the specified confidence level.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">confidence_level</span>
+    
+    <span class="c1"># Estimate parameters from historical returns</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    
+    <span class="c1"># Generate simulated returns</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span>
+        <span class="c1"># Normal distribution</span>
+        <span class="n">simulated_returns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mu</span> <span class="o">*</span> <span class="n">horizon</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">horizon</span><span class="p">),</span> <span class="n">n_simulations</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span>
+        <span class="c1"># Student&#39;s t-distribution (better for fat tails)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># degrees of freedom - can be estimated from data</span>
+        <span class="n">simulated_returns</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">mu</span> <span class="o">*</span> <span class="n">horizon</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">horizon</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_simulations</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;empirical&#39;</span><span class="p">:</span>
+        <span class="c1"># Empirical bootstrap (resampling from historical returns)</span>
+        <span class="n">simulated_returns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_simulations</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;skewed&#39;</span><span class="p">:</span>
+        <span class="c1"># Skewed normal distribution</span>
+        <span class="n">skewness</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">skew</span><span class="p">()</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">skewness</span>  <span class="c1"># skewness parameter (simplified)</span>
+        <span class="n">simulated_returns</span> <span class="o">=</span> <span class="n">skewnorm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">mu</span> <span class="o">*</span> <span class="n">horizon</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">horizon</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_simulations</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported method: </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate VaR and CVaR</span>
+    <span class="n">sorted_returns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">simulated_returns</span><span class="p">)</span>
+    <span class="n">var_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_simulations</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">)</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="o">-</span><span class="n">sorted_returns</span><span class="p">[</span><span class="n">var_index</span><span class="p">]</span>
+    <span class="n">cvar</span> <span class="o">=</span> <span class="o">-</span><span class="n">sorted_returns</span><span class="p">[:</span><span class="n">var_index</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">var</span><span class="p">,</span> <span class="n">cvar</span></div>
+
+<div class="viewcode-block" id="calculate_risk_metrics"><a class="viewcode-back" href="../modules.html#portfolio.calculate_risk_metrics">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_risk_metrics</span><span class="p">(</span><span class="n">returns</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">risk_free_rate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">mc_method</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate comprehensive risk metrics for a series of portfolio returns.</span>
 <span class="sd">    </span>
 <span class="sd">    Metrics include:</span>
 <span class="sd">      - Annualized volatility</span>
 <span class="sd">      - Annualized Sharpe ratio</span>
-<span class="sd">      - Historical VaR (95%)</span>
-<span class="sd">      - Historical CVaR (95%)</span>
+<span class="sd">      - Monte Carlo VaR (95%)</span>
+<span class="sd">      - Monte Carlo CVaR (95%)</span>
 <span class="sd">      - Maximum drawdown</span>
 <span class="sd">      - Skewness and kurtosis</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        returns (Series): Daily portfolio returns.</span>
-<span class="sd">        risk_free_rate (float): Default 0.</span>
+<span class="sd">        risk_free_rate (float): Annual risk-free rate.</span>
+<span class="sd">        mc_method (str): Monte Carlo simulation method.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns:</span>
 <span class="sd">        dict: Risk metrics.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">volatility</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="mi">252</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
-    <span class="n">sharpe_ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">returns</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="n">returns</span><span class="o">.</span><span class="n">std</span><span class="p">())</span> <span class="o">*</span> <span class="p">(</span><span class="mi">252</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
-    <span class="n">var_95</span> <span class="o">=</span> <span class="o">-</span><span class="n">returns</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
-    <span class="n">cvar_95</span> <span class="o">=</span> <span class="o">-</span><span class="n">returns</span><span class="p">[</span><span class="n">returns</span> <span class="o">&lt;=</span> <span class="n">returns</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">volatility</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">252</span><span class="p">)</span>
+    <span class="n">excess_return</span> <span class="o">=</span> <span class="n">returns</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="p">(</span><span class="n">risk_free_rate</span> <span class="o">/</span> <span class="mi">252</span><span class="p">)</span>
+    <span class="n">sharpe_ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">excess_return</span> <span class="o">/</span> <span class="n">returns</span><span class="o">.</span><span class="n">std</span><span class="p">())</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">252</span><span class="p">)</span>
+    
+    <span class="c1"># Monte Carlo VaR and CVaR calculation</span>
+    <span class="n">var_95</span><span class="p">,</span> <span class="n">cvar_95</span> <span class="o">=</span> <span class="n">monte_carlo_var_cvar</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">mc_method</span><span class="p">)</span>
+    
+    <span class="c1"># Historical VaR and CVaR for comparison</span>
+    <span class="n">hist_var_95</span> <span class="o">=</span> <span class="o">-</span><span class="n">returns</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="n">hist_cvar_95</span> <span class="o">=</span> <span class="o">-</span><span class="n">returns</span><span class="p">[</span><span class="n">returns</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="n">hist_var_95</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
     
     <span class="n">cumulative</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">returns</span><span class="p">)</span><span class="o">.</span><span class="n">cumprod</span><span class="p">()</span>
     <span class="n">max_drawdown</span> <span class="o">=</span> <span class="p">(</span><span class="n">cumulative</span> <span class="o">/</span> <span class="n">cumulative</span><span class="o">.</span><span class="n">cummax</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
@@ -141,34 +224,99 @@
         <span class="s1">&#39;Sharpe Ratio&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">sharpe_ratio</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
         <span class="s1">&#39;VaR (95%)&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">var_95</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
         <span class="s1">&#39;CVaR (95%)&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">cvar_95</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="s1">&#39;Historical VaR (95%)&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">hist_var_95</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="s1">&#39;Historical CVaR (95%)&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">hist_cvar_95</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
         <span class="s1">&#39;Maximum Drawdown&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">max_drawdown</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
         <span class="s1">&#39;Skewness&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">skewness</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
         <span class="s1">&#39;Kurtosis&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">kurtosis</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
     <span class="p">}</span></div>
 
-<div class="viewcode-block" id="stress_test_portfolio"><a class="viewcode-back" href="../modules.html#portfolio.stress_test_portfolio">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">stress_test_portfolio</span><span class="p">(</span><span class="n">returns</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">scenarios</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<div class="viewcode-block" id="generate_correlated_scenario_returns"><a class="viewcode-back" href="../modules.html#portfolio.generate_correlated_scenario_returns">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">generate_correlated_scenario_returns</span><span class="p">(</span><span class="n">returns</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">shock_params</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate scenario returns with specified shock parameters that maintain realistic</span>
+<span class="sd">    correlations and create meaningful variations in higher moments (skewness, kurtosis).</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        returns (Series): Original portfolio returns.</span>
+<span class="sd">        shock_params (dict): Parameters for the shock including:</span>
+<span class="sd">            - &#39;multiplicative&#39;: Factor to multiply returns by</span>
+<span class="sd">            - &#39;additive&#39;: Constant to add to returns</span>
+<span class="sd">            - &#39;vol_factor&#39;: Factor to adjust volatility</span>
+<span class="sd">            - &#39;skew_factor&#39;: Factor to adjust skewness</span>
+<span class="sd">            - &#39;tail_factor&#39;: Factor to enhance tail events (affects kurtosis)</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Series: Adjusted returns for the stress scenario.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Extract parameters</span>
+    <span class="n">multiplicative</span> <span class="o">=</span> <span class="n">shock_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;multiplicative&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">additive</span> <span class="o">=</span> <span class="n">shock_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;additive&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">vol_factor</span> <span class="o">=</span> <span class="n">shock_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vol_factor&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">skew_factor</span> <span class="o">=</span> <span class="n">shock_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;skew_factor&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">tail_factor</span> <span class="o">=</span> <span class="n">shock_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tail_factor&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    
+    <span class="c1"># Base adjustment</span>
+    <span class="n">adjusted_returns</span> <span class="o">=</span> <span class="n">returns</span> <span class="o">*</span> <span class="n">multiplicative</span> <span class="o">+</span> <span class="n">additive</span>
+    
+    <span class="c1"># Adjust volatility</span>
+    <span class="k">if</span> <span class="n">vol_factor</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="n">mean_return</span> <span class="o">=</span> <span class="n">adjusted_returns</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">centered_returns</span> <span class="o">=</span> <span class="n">adjusted_returns</span> <span class="o">-</span> <span class="n">mean_return</span>
+        <span class="n">adjusted_returns</span> <span class="o">=</span> <span class="p">(</span><span class="n">centered_returns</span> <span class="o">*</span> <span class="n">vol_factor</span><span class="p">)</span> <span class="o">+</span> <span class="n">mean_return</span>
+    
+    <span class="c1"># Enhance tail events for kurtosis</span>
+    <span class="k">if</span> <span class="n">tail_factor</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="c1"># Find returns beyond 2 standard deviations</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">adjusted_returns</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+        <span class="n">extreme_mask</span> <span class="o">=</span> <span class="n">adjusted_returns</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">threshold</span>
+        
+        <span class="c1"># Apply tail factor only to extreme returns</span>
+        <span class="n">tail_adjustment</span> <span class="o">=</span> <span class="n">adjusted_returns</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">tail_adjustment</span><span class="p">[</span><span class="n">extreme_mask</span><span class="p">]</span> <span class="o">*=</span> <span class="n">tail_factor</span>
+        <span class="n">adjusted_returns</span> <span class="o">=</span> <span class="n">tail_adjustment</span>
+    
+    <span class="c1"># Apply skewness adjustment</span>
+    <span class="k">if</span> <span class="n">skew_factor</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Create a skew component proportional to the cube of standardized returns</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">adjusted_returns</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">adjusted_returns</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+        <span class="n">z_scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">adjusted_returns</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">std</span>
+        <span class="n">skew_component</span> <span class="o">=</span> <span class="n">skew_factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">z_scores</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">std</span> <span class="o">/</span> <span class="mi">10</span>
+        
+        <span class="n">adjusted_returns</span> <span class="o">=</span> <span class="n">adjusted_returns</span> <span class="o">+</span> <span class="n">skew_component</span>
+    
+    <span class="k">return</span> <span class="n">adjusted_returns</span></div>
+
+<div class="viewcode-block" id="stress_test_portfolio"><a class="viewcode-back" href="../modules.html#portfolio.stress_test_portfolio">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">stress_test_portfolio</span><span class="p">(</span><span class="n">returns</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">scenarios</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">mc_method</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply stress scenarios to portfolio returns and compute risk metrics.</span>
 <span class="sd">    </span>
-<span class="sd">    Each scenario adjusts returns using both a multiplicative and additive shock.</span>
-<span class="sd">    That is, for a given scenario,</span>
-<span class="sd">    stressed_returns = returns * (1 + scenario[&#39;shock&#39;]) + scenario[&#39;additive&#39;]</span>
+<span class="sd">    Each scenario now has a more sophisticated shock model that affects not just</span>
+<span class="sd">    the mean and variance but also higher moments like skewness and kurtosis.</span>
 <span class="sd">       </span>
-<span class="sd">    This method will alter both the scale and distribution shape, so that metrics like Sharpe ratio,</span>
-<span class="sd">    skewness, and kurtosis (which are scale- and shift-sensitive, respectively) will change.</span>
-<span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        returns (Series): Original daily portfolio returns.</span>
-<span class="sd">        scenarios (list): List of stress scenarios.</span>
+<span class="sd">        scenarios (list): List of stress scenarios with shock parameters.</span>
+<span class="sd">        mc_method (str): Monte Carlo simulation method for VaR calculations.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns:</span>
 <span class="sd">        dict: Dictionary with scenario names as keys and risk metrics as values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">stressed_results</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">scenarios</span><span class="p">:</span>
-        <span class="n">stressed_returns</span> <span class="o">=</span> <span class="n">returns</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">scenario</span><span class="p">[</span><span class="s1">&#39;shock&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">scenario</span><span class="p">[</span><span class="s1">&#39;additive&#39;</span><span class="p">]</span>
-        <span class="n">metrics</span> <span class="o">=</span> <span class="n">calculate_risk_metrics</span><span class="p">(</span><span class="n">stressed_returns</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">scenarios</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Running stress tests&quot;</span><span class="p">):</span>
+        <span class="n">shock_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;multiplicative&#39;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">scenario</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;shock&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s1">&#39;additive&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;additive&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s1">&#39;vol_factor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vol_factor&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+            <span class="s1">&#39;skew_factor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;skew_factor&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s1">&#39;tail_factor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tail_factor&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="p">}</span>
+        
+        <span class="n">stressed_returns</span> <span class="o">=</span> <span class="n">generate_correlated_scenario_returns</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">shock_params</span><span class="p">)</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">calculate_risk_metrics</span><span class="p">(</span><span class="n">stressed_returns</span><span class="p">,</span> <span class="n">mc_method</span><span class="o">=</span><span class="n">mc_method</span><span class="p">)</span>
         <span class="n">stressed_results</span><span class="p">[</span><span class="n">scenario</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">metrics</span>
+    
     <span class="k">return</span> <span class="n">stressed_results</span></div>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>

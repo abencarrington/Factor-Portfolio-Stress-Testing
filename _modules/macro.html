@@ -8,6 +8,7 @@
   <title>macro &mdash; Dynamic Factor-Tilted Portfolio with Macro Stress Testing 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5cf0b8b4" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -15,6 +16,7 @@
       <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=359c27e9"></script>
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -41,10 +43,32 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">Factor Data Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html#module-macro">Market Regime Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html#module-portfolio">Portfolio Construction Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html#module-main">Main Analysis Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Factor Data Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#factors.get_fama_french_5_factor_url"><code class="docutils literal notranslate"><span class="pre">get_fama_french_5_factor_url()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#factors.download_fama_french_5_factors"><code class="docutils literal notranslate"><span class="pre">download_fama_french_5_factors()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html#module-macro">Market Regime Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#macro.analyze_market_regime"><code class="docutils literal notranslate"><span class="pre">analyze_market_regime()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#macro.define_stress_scenarios"><code class="docutils literal notranslate"><span class="pre">define_stress_scenarios()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html#module-portfolio">Portfolio Construction Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#portfolio.construct_portfolio"><code class="docutils literal notranslate"><span class="pre">construct_portfolio()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#portfolio.monte_carlo_var_cvar"><code class="docutils literal notranslate"><span class="pre">monte_carlo_var_cvar()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#portfolio.calculate_risk_metrics"><code class="docutils literal notranslate"><span class="pre">calculate_risk_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#portfolio.generate_correlated_scenario_returns"><code class="docutils literal notranslate"><span class="pre">generate_correlated_scenario_returns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#portfolio.stress_test_portfolio"><code class="docutils literal notranslate"><span class="pre">stress_test_portfolio()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html#module-main">Main Analysis Script</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#main.generate_plotly_metric_plots"><code class="docutils literal notranslate"><span class="pre">generate_plotly_metric_plots()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#main.generate_portfolio_performance_plot"><code class="docutils literal notranslate"><span class="pre">generate_portfolio_performance_plot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#main.generate_correlation_heatmap"><code class="docutils literal notranslate"><span class="pre">generate_correlation_heatmap()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#main.generate_risk_comparison_radar"><code class="docutils literal notranslate"><span class="pre">generate_risk_comparison_radar()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -83,8 +107,9 @@
 <span class="sd">    Uses:</span>
 <span class="sd">      - 30-day rolling annualized volatility of SPY returns.</span>
 <span class="sd">      - 50-day and 200-day moving averages to assess trend.</span>
+<span class="sd">      - 14-day RSI to assess momentum</span>
 <span class="sd">      </span>
-<span class="sd">    Classification rules (example):</span>
+<span class="sd">    Classification rules:</span>
 <span class="sd">      - If volatility &gt; 0.25: &#39;Recession&#39;</span>
 <span class="sd">      - Else if volatility &lt; 0.15 and 50-day MA &gt; 200-day MA: &#39;Expansion&#39;</span>
 <span class="sd">      - Else if 50-day MA &lt; 200-day MA: &#39;Contraction&#39;</span>
@@ -100,19 +125,28 @@
 <span class="sd">            - &#39;description&#39;: A short description.</span>
 <span class="sd">            - &#39;volatility&#39;: Latest computed annualized volatility.</span>
 <span class="sd">            - &#39;trend&#39;: &#39;Bullish&#39; or &#39;Bearish&#39;.</span>
+<span class="sd">            - &#39;rsi&#39;: Relative Strength Index value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">end_date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">end_date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
     
-    <span class="n">spy</span> <span class="o">=</span> <span class="n">yf</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;SPY&quot;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end_date</span><span class="p">)[</span><span class="s1">&#39;Close&#39;</span><span class="p">]</span>
-    <span class="n">spy_returns</span> <span class="o">=</span> <span class="n">spy</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">spy</span> <span class="o">=</span> <span class="n">yf</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s2">&quot;SPY&quot;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end_date</span><span class="p">)</span>
+    <span class="n">spy_returns</span> <span class="o">=</span> <span class="n">spy</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
     
-    <span class="n">rolling_vol</span> <span class="o">=</span> <span class="n">spy_returns</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="mi">252</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="c1"># Compute volatility</span>
+    <span class="n">rolling_vol</span> <span class="o">=</span> <span class="n">spy_returns</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">252</span><span class="p">)</span>
     <span class="n">latest_vol</span> <span class="o">=</span> <span class="n">rolling_vol</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
     
-    <span class="c1"># Compute moving averages and convert them to scalars</span>
-    <span class="n">ma50</span> <span class="o">=</span> <span class="n">spy</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-    <span class="n">ma200</span> <span class="o">=</span> <span class="n">spy</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="c1"># Compute moving averages</span>
+    <span class="n">ma50</span> <span class="o">=</span> <span class="n">spy</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="n">ma200</span> <span class="o">=</span> <span class="n">spy</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    
+    <span class="c1"># Compute RSI</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">spy</span><span class="p">[</span><span class="s1">&#39;Close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
+    <span class="n">gain</span> <span class="o">=</span> <span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">delta</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">delta</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">delta</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="n">gain</span> <span class="o">/</span> <span class="n">loss</span>
+    <span class="n">rsi</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">-</span> <span class="p">(</span><span class="mi">100</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">rs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
     
     <span class="n">trend</span> <span class="o">=</span> <span class="s2">&quot;Bullish&quot;</span> <span class="k">if</span> <span class="n">ma50</span> <span class="o">&gt;</span> <span class="n">ma200</span> <span class="k">else</span> <span class="s2">&quot;Bearish&quot;</span>
     
@@ -133,29 +167,71 @@
         <span class="s1">&#39;regime&#39;</span><span class="p">:</span> <span class="n">regime</span><span class="p">,</span>
         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
         <span class="s1">&#39;volatility&#39;</span><span class="p">:</span> <span class="n">latest_vol</span><span class="p">,</span>
-        <span class="s1">&#39;trend&#39;</span><span class="p">:</span> <span class="n">trend</span>
+        <span class="s1">&#39;trend&#39;</span><span class="p">:</span> <span class="n">trend</span><span class="p">,</span>
+        <span class="s1">&#39;rsi&#39;</span><span class="p">:</span> <span class="n">rsi</span>
     <span class="p">}</span></div>
 
 <div class="viewcode-block" id="define_stress_scenarios"><a class="viewcode-back" href="../modules.html#macro.define_stress_scenarios">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">define_stress_scenarios</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Define a set of hypothetical macroeconomic stress scenarios.</span>
+<span class="sd">    Define a set of hypothetical macroeconomic stress scenarios with enhanced parameters</span>
+<span class="sd">    to create more realistic variations in risk metrics.</span>
 <span class="sd">    </span>
-<span class="sd">    Each scenario now includes:</span>
-<span class="sd">      - &#39;shock&#39;: the multiplicative factor (e.g., -0.30 means returns become 70% of original)</span>
-<span class="sd">      - &#39;additive&#39;: an additional additive shock to simulate a downward shift</span>
+<span class="sd">    Each scenario includes:</span>
+<span class="sd">      - &#39;shock&#39;: Multiplicative factor (e.g., -0.30 means returns become 70% of original)</span>
+<span class="sd">      - &#39;additive&#39;: Additional additive shock to simulate a downward shift</span>
+<span class="sd">      - &#39;vol_factor&#39;: Volatility scaling factor</span>
+<span class="sd">      - &#39;skew_factor&#39;: Skewness adjustment factor</span>
+<span class="sd">      - &#39;tail_factor&#39;: Factor to enhance tail events (affecting kurtosis)</span>
 <span class="sd">      </span>
 <span class="sd">    Returns:</span>
-<span class="sd">        list: A list of scenarios with keys &#39;name&#39;, &#39;shock&#39;, &#39;additive&#39;, and &#39;description&#39;.</span>
+<span class="sd">        list: A list of scenarios with comprehensive parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">scenarios</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Severe Recession&#39;</span><span class="p">,</span> <span class="s1">&#39;shock&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.30</span><span class="p">,</span> <span class="s1">&#39;additive&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.001</span><span class="p">,</span> 
-         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A sharp downturn with an additional negative shift.&#39;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Rapid Rate Hike&#39;</span><span class="p">,</span>  <span class="s1">&#39;shock&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.15</span><span class="p">,</span> <span class="s1">&#39;additive&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0005</span><span class="p">,</span> 
-         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A moderate drop with a small negative shift.&#39;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Market Crash&#39;</span><span class="p">,</span>      <span class="s1">&#39;shock&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.40</span><span class="p">,</span> <span class="s1">&#39;additive&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.002</span><span class="p">,</span> 
-         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A significant drop with a larger negative shift.&#39;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Mild Correction&#39;</span><span class="p">,</span>   <span class="s1">&#39;shock&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;additive&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0002</span><span class="p">,</span> 
-         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A minor drop with a slight negative shift.&#39;</span><span class="p">}</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Severe Recession&#39;</span><span class="p">,</span> 
+            <span class="s1">&#39;shock&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.30</span><span class="p">,</span>                 <span class="c1"># Significant reduction in returns</span>
+            <span class="s1">&#39;additive&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.001</span><span class="p">,</span>             <span class="c1"># Additional negative shift</span>
+            <span class="s1">&#39;vol_factor&#39;</span><span class="p">:</span> <span class="mf">1.75</span><span class="p">,</span>             <span class="c1"># Increased volatility</span>
+            <span class="s1">&#39;skew_factor&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.7</span><span class="p">,</span>            <span class="c1"># Negative skew (more extreme negative returns)</span>
+            <span class="s1">&#39;tail_factor&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>             <span class="c1"># Fatter tails (higher kurtosis)</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A severe economic downturn with increased volatility, negative skew, and extreme tail events.&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Rapid Rate Hike&#39;</span><span class="p">,</span> 
+            <span class="s1">&#39;shock&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.15</span><span class="p">,</span>                 <span class="c1"># Moderate reduction in returns</span>
+            <span class="s1">&#39;additive&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0005</span><span class="p">,</span>            <span class="c1"># Small negative shift</span>
+            <span class="s1">&#39;vol_factor&#39;</span><span class="p">:</span> <span class="mf">1.35</span><span class="p">,</span>             <span class="c1"># Moderately increased volatility</span>
+            <span class="s1">&#39;skew_factor&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.4</span><span class="p">,</span>            <span class="c1"># Slight negative skew</span>
+            <span class="s1">&#39;tail_factor&#39;</span><span class="p">:</span> <span class="mf">1.3</span><span class="p">,</span>             <span class="c1"># Moderately fatter tails</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A scenario where central banks rapidly increase interest rates, causing market turbulence.&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Market Crash&#39;</span><span class="p">,</span>  
+            <span class="s1">&#39;shock&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.40</span><span class="p">,</span>                 <span class="c1"># Major reduction in returns</span>
+            <span class="s1">&#39;additive&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.002</span><span class="p">,</span>             <span class="c1"># Larger negative shift</span>
+            <span class="s1">&#39;vol_factor&#39;</span><span class="p">:</span> <span class="mf">2.2</span><span class="p">,</span>              <span class="c1"># Dramatically increased volatility</span>
+            <span class="s1">&#39;skew_factor&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.2</span><span class="p">,</span>            <span class="c1"># Strong negative skew</span>
+            <span class="s1">&#39;tail_factor&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>             <span class="c1"># Much fatter tails</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A sudden market crash with extreme volatility and strongly negative skewed returns.&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Mild Correction&#39;</span><span class="p">,</span> 
+            <span class="s1">&#39;shock&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span>                 <span class="c1"># Minor reduction in returns</span>
+            <span class="s1">&#39;additive&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0002</span><span class="p">,</span>            <span class="c1"># Very small negative shift</span>
+            <span class="s1">&#39;vol_factor&#39;</span><span class="p">:</span> <span class="mf">1.15</span><span class="p">,</span>             <span class="c1"># Slightly increased volatility</span>
+            <span class="s1">&#39;skew_factor&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span>            <span class="c1"># Minimal negative skew</span>
+            <span class="s1">&#39;tail_factor&#39;</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">,</span>             <span class="c1"># Slightly fatter tails</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A modest market correction with slightly elevated volatility.&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Stagflation&#39;</span><span class="p">,</span> 
+            <span class="s1">&#39;shock&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.12</span><span class="p">,</span>                 <span class="c1"># Moderate reduction in returns</span>
+            <span class="s1">&#39;additive&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0008</span><span class="p">,</span>            <span class="c1"># Moderate negative shift</span>
+            <span class="s1">&#39;vol_factor&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>              <span class="c1"># Increased volatility</span>
+            <span class="s1">&#39;skew_factor&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span>            <span class="c1"># Moderate negative skew</span>
+            <span class="s1">&#39;tail_factor&#39;</span><span class="p">:</span> <span class="mf">1.25</span><span class="p">,</span>            <span class="c1"># Moderately fatter tails</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A period of high inflation combined with slow economic growth and elevated market uncertainty.&#39;</span>
+        <span class="p">}</span>
     <span class="p">]</span>
     <span class="k">return</span> <span class="n">scenarios</span></div>
 
