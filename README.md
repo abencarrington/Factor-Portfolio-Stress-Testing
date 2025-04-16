@@ -108,7 +108,7 @@ A GitHub Actions workflow is set up (see `.github/workflows/schedule.yml`) to au
 ## Requirements
 
 - Python 3.8+
-- Libraries: pandas, numpy, plotly, scipy, statsmodels, sphinx, tqdm, yfinance, beautifulsoup4, requests
+- Libraries: pandas, numpy, plotly, scipy, statsmodels, sphinx, tqdm, yfinance, beautifulsoup4, requests, kaleido
 
 ## License
 
