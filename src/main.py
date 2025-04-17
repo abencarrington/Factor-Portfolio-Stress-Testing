@@ -305,7 +305,7 @@ def main():
     
     # Download factor data (from Kenneth French's website)
     print("Downloading Fama-French 5 factor data...")
-    factors = download_fama_french_5_factors()
+    factors = download_fama_french_5_factors(start_date='2010-01-01')
     
     # Analyze the current market regime using SPY data
     print("Analyzing market regime...")
