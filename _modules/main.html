@@ -403,7 +403,7 @@
     
     <span class="c1"># Download factor data (from Kenneth French&#39;s website)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Downloading Fama-French 5 factor data...&quot;</span><span class="p">)</span>
-    <span class="n">factors</span> <span class="o">=</span> <span class="n">download_fama_french_5_factors</span><span class="p">()</span>
+    <span class="n">factors</span> <span class="o">=</span> <span class="n">download_fama_french_5_factors</span><span class="p">(</span><span class="n">start_date</span><span class="o">=</span><span class="s1">&#39;2010-01-01&#39;</span><span class="p">)</span>
     
     <span class="c1"># Analyze the current market regime using SPY data</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Analyzing market regime...&quot;</span><span class="p">)</span>
