@@ -309,15 +309,18 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     
-    <span class="c1"># Select metrics to include in radar (normalized)</span>
-    <span class="n">radar_metrics</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s1">&#39;Annualized Volatility&#39;</span><span class="p">,</span> 
-        <span class="s1">&#39;VaR (95%)&#39;</span><span class="p">,</span> 
-        <span class="s1">&#39;CVaR (95%)&#39;</span><span class="p">,</span> 
-        <span class="s1">&#39;Maximum Drawdown&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Skewness&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Kurtosis&#39;</span>
-    <span class="p">]</span>
+    <span class="c1"># Select metrics to include in radar (normalized) with shorter display names</span>
+    <span class="n">radar_metrics_display</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;Annualized Volatility&#39;</span><span class="p">:</span> <span class="s1">&#39;Volatility&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;VaR (95%)&#39;</span><span class="p">:</span> <span class="s1">&#39;VaR&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;CVaR (95%)&#39;</span><span class="p">:</span> <span class="s1">&#39;CVaR&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;Maximum Drawdown&#39;</span><span class="p">:</span> <span class="s1">&#39;Max DD&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Skewness&#39;</span><span class="p">:</span> <span class="s1">&#39;Skew&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Kurtosis&#39;</span><span class="p">:</span> <span class="s1">&#39;Kurtosis&#39;</span>
+    <span class="p">}</span>
+    
+    <span class="n">radar_metrics</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">radar_metrics_display</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">radar_display_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">radar_metrics_display</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
     
     <span class="c1"># Prepare data for radar chart</span>
     <span class="n">scenarios</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Baseline&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">stressed_results</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -361,9 +364,10 @@
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scenarios</span><span class="p">):</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatterpolar</span><span class="p">(</span>
             <span class="n">r</span><span class="o">=</span><span class="n">normalized_data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-            <span class="n">theta</span><span class="o">=</span><span class="n">radar_metrics</span><span class="p">,</span>
+            <span class="n">theta</span><span class="o">=</span><span class="n">radar_display_names</span><span class="p">,</span>  <span class="c1"># Use shorter display names</span>
             <span class="n">fill</span><span class="o">=</span><span class="s1">&#39;toself&#39;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">scenario</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+            <span class="n">hovertemplate</span><span class="o">=</span><span class="s1">&#39;%</span><span class="si">{theta}</span><span class="s1">: %</span><span class="si">{r:.4f}</span><span class="s1">&lt;extra&gt;&#39;</span> <span class="o">+</span> <span class="n">scenario</span> <span class="o">+</span> <span class="s1">&#39;&lt;/extra&gt;&#39;</span>
         <span class="p">))</span>
     
     <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
@@ -371,12 +375,16 @@
             <span class="n">radialaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
                 <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="p">),</span>
+            <span class="n">angularaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>  <span class="c1"># Increase font size for better readability</span>
             <span class="p">)</span>
         <span class="p">),</span>
         <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Risk Profile Comparison&quot;</span><span class="p">,</span>
         <span class="n">showlegend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
-        <span class="n">height</span><span class="o">=</span><span class="mi">800</span>
+        <span class="n">height</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
+        <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>  <span class="c1"># Increased margins to prevent cutoff</span>
     <span class="p">)</span>
     
     <span class="c1"># Save as interactive HTML</span>

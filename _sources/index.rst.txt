@@ -8,18 +8,25 @@ Overview
 
 This project dynamically constructs a factor-tilted portfolio using the Fama–French 5 Factor model.  
 The historical factor data is sourced directly from Kenneth French's website via web scraping.  
-The portfolio adjusts its weights based on the current market regime (determined via SPY's volatility and moving averages) and undergoes sophisticated stress testing with various market scenarios.
+The portfolio adjusts its weights based on the current market regime (determined via SPY's volatility and moving averages) and undergoes stress testing based on various market scenarios.
 
 Features:
+
+- **Factor Modeling:** Uses the Fama-French 5 Factor model, which includes:
+   - **MKT (Market):** The excess return of the market over the risk-free rate, representing systematic market risk
+   - **SMB (Small Minus Big):** The return spread between small and large market capitalization stocks, capturing the size premium
+   - **HML (High Minus Low):** The return spread between high and low book-to-market stocks, measuring the value premium
+   - **RMW (Robust Minus Weak):** The return spread between stocks with robust vs. weak profitability
+   - **CMA (Conservative Minus Aggressive):** The return spread between companies with conservative vs. aggressive investment strategies
 
 - **Market Regime Analysis:** Uses SPY's rolling volatility, moving averages, and RSI to determine the current market environment.
 
 - **Dynamic Factor Tilting:** Adjusts portfolio weights based on the identified market regime.
 
 - **Advanced Risk Analysis:** Calculates risk metrics including:
-   - Monte Carlo simulations for VaR and CVaR (using Student's t-distribution)
-   - Traditional volatility, Sharpe ratio, and maximum drawdown
-   - Higher-moment statistics like skewness and kurtosis
+   - **Monte Carlo VaR/CVaR:** Estimates risk using Student's t-distribution simulations to better capture fat-tailed market behavior. Value-at-Risk (VaR) represents the potential loss at a given confidence level (e.g., 95%), while Conditional VaR (CVaR) estimates the expected loss when exceeding VaR threshold, providing a more complete view of tail risk.
+   - **Traditional metrics:** Volatility, Sharpe ratio, and maximum drawdown
+   - **Higher-moment statistics:** Skewness (distribution asymmetry) and kurtosis (tail thickness)
 
 - **Sophisticated Stress Testing:** Evaluates performance under various adverse scenarios with detailed modeling of:
    - Return impacts (multiplicative and additive effects)
@@ -29,7 +36,7 @@ Features:
 
 - **Interactive Visualizations:** Provides Plotly-based interactive charts for deeper analysis.
 
-- **Automated Documentation:** Builds a comprehensive site with Sphinx, including both static and interactive elements.
+- **Automated Documentation:** Builds a comprehensive site with Sphinx, including interactive elements.
 
 - **GitHub Pages Deployment:** Automatically updates the site on a weekly schedule.
 
@@ -39,12 +46,6 @@ Portfolio Performance
 .. raw:: html
    :file: _static/portfolio_returns.html
 
-If the interactive chart doesn't load, you can view the static version below:
-
-.. image:: _static/portfolio_returns.png
-   :alt: Portfolio Returns Plot
-   :align: center
-
 Factor Correlations
 ------------------
 Understanding factor correlations is crucial for diversification and factor tilting:
@@ -52,24 +53,12 @@ Understanding factor correlations is crucial for diversification and factor tilt
 .. raw:: html
    :file: _static/factor_correlation.html
 
-If the interactive chart doesn't load, you can view the static version below:
-
-.. image:: _static/factor_correlation.png
-   :alt: Factor Correlation Heatmap
-   :align: center
-
 Risk Profile Comparison
 ----------------------
 The radar chart below compares risk metrics across different stress scenarios:
 
 .. raw:: html
    :file: _static/risk_radar.html
-
-If the interactive chart doesn't load, you can view the static version below:
-
-.. image:: _static/risk_radar.png
-   :alt: Risk Profile Radar Chart
-   :align: center
 
 Risk Metrics
 ------------
@@ -80,63 +69,35 @@ Annualized Volatility
 .. raw:: html
    :file: _static/annualized_volatility.html
 
-.. image:: _static/annualized_volatility.png
-   :alt: Annualized Volatility
-   :align: center
-
 Sharpe Ratio
 ~~~~~~~~~~~
 .. raw:: html
    :file: _static/sharpe_ratio.html
-
-.. image:: _static/sharpe_ratio.png
-   :alt: Sharpe Ratio
-   :align: center
 
 Value-at-Risk (95%)
 ~~~~~~~~~~~~~~~~
 .. raw:: html
    :file: _static/var_(95%).html
 
-.. image:: _static/var_(95%).png
-   :alt: VaR (95%)
-   :align: center
-
 Conditional Value-at-Risk (95%)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. raw:: html
    :file: _static/cvar_(95%).html
-
-.. image:: _static/cvar_(95%).png
-   :alt: CVaR (95%)
-   :align: center
 
 Maximum Drawdown
 ~~~~~~~~~~~~~~
 .. raw:: html
    :file: _static/maximum_drawdown.html
 
-.. image:: _static/maximum_drawdown.png
-   :alt: Maximum Drawdown
-   :align: center
-
 Skewness
 ~~~~~~~~
 .. raw:: html
    :file: _static/skewness.html
 
-.. image:: _static/skewness.png
-   :alt: Skewness
-   :align: center
-
 Kurtosis
 ~~~~~~~~
 .. raw:: html
    :file: _static/kurtosis.html
-
-.. image:: _static/kurtosis.png
-   :alt: Kurtosis
-   :align: center
 
 How It Works
 ------------
