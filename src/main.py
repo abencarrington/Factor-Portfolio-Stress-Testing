@@ -211,15 +211,18 @@ def generate_risk_comparison_radar(baseline_metrics, stressed_results, output_di
     """
     os.makedirs(output_dir, exist_ok=True)
     
-    # Select metrics to include in radar (normalized)
-    radar_metrics = [
-        'Annualized Volatility', 
-        'VaR (95%)', 
-        'CVaR (95%)', 
-        'Maximum Drawdown',
-        'Skewness',
-        'Kurtosis'
-    ]
+    # Select metrics to include in radar (normalized) with shorter display names
+    radar_metrics_display = {
+        'Annualized Volatility': 'Volatility', 
+        'VaR (95%)': 'VaR', 
+        'CVaR (95%)': 'CVaR', 
+        'Maximum Drawdown': 'Max DD',
+        'Skewness': 'Skew',
+        'Kurtosis': 'Kurtosis'
+    }
+    
+    radar_metrics = list(radar_metrics_display.keys())
+    radar_display_names = list(radar_metrics_display.values())
     
     # Prepare data for radar chart
     scenarios = ["Baseline"] + list(stressed_results.keys())
@@ -263,9 +266,10 @@ def generate_risk_comparison_radar(baseline_metrics, stressed_results, output_di
     for i, scenario in enumerate(scenarios):
         fig.add_trace(go.Scatterpolar(
             r=normalized_data[i],
-            theta=radar_metrics,
+            theta=radar_display_names,  # Use shorter display names
             fill='toself',
-            name=scenario
+            name=scenario,
+            hovertemplate='%{theta}: %{r:.4f}<extra>' + scenario + '</extra>'
         ))
     
     fig.update_layout(
@@ -273,12 +277,16 @@ def generate_risk_comparison_radar(baseline_metrics, stressed_results, output_di
             radialaxis=dict(
                 visible=True,
                 range=[0, 1]
+            ),
+            angularaxis=dict(
+                tickfont=dict(size=14)  # Increase font size for better readability
             )
         ),
         title="Risk Profile Comparison",
         showlegend=True,
         width=800,
-        height=800
+        height=800,
+        margin=dict(t=100, b=100, l=80, r=80)  # Increased margins to prevent cutoff
     )
     
     # Save as interactive HTML
